@@ -125,14 +125,18 @@ schemas:
       # If both are defined (which they should not), the valueFromFile will be used
       - name: my_placeholder
         # The value to be used for this placeholder (optional)
-        # This value will can used in the migration scripts as ${my_placeholder}
+        # This value can be used in the migration scripts as ${my_placeholder}
         value: my_value
-        # A file which contains the value for this placeholder (optional)
-        # This value will can used in the migration scripts as ${my_placeholder}
+      # A placeholder that gets its value from a file
+      - name: my_placeholder_from_file
+        # The value to be used for this placeholder (optional)
+        # This value can be used in the migration scripts as ${my_placeholder_from_file}
+        # The value must be a path to a file that contains the value
+        # The file will be read and the contents will be used as the value
         valueFromFile: ./path/to/file
     # Flyway arguments for this schema (optional)
-    # If the argument, e.g 'connectRetries' is also defined in the top level flywayArgs section,
-    # the schema's value will take precedence
+    # If the argument, e.g 'connectRetries' is also defined in the top level
+    # flywayArgs section, the schema's value will take precedence
     flywayArgs:
       - -connectRetries=10
       - -baselineOnMigrate=true

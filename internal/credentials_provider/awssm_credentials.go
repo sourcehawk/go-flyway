@@ -7,6 +7,8 @@ import (
 	sp "github.com/sourcehawk/go-flyway/internal/secrets_provider"
 )
 
+var NewAWSSecretsManager = sp.NewAWSSecretsManager
+
 type AWSSMDatabaseCredentials struct {
 	Username *sp.SecretRef `yaml:"username,omitempty"`
 	Password *sp.SecretRef `yaml:"password,omitempty"`
@@ -36,6 +38,13 @@ func (d *AWSSMDatabaseCredentials) Validate() error {
 		if err := s.Validate(); err != nil {
 			return err
 		}
+	}
+	if d.awssm == nil {
+		awssm, err := NewAWSSecretsManager()
+		if err != nil {
+			return err
+		}
+		d.awssm = awssm
 	}
 	return nil
 }

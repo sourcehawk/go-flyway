@@ -66,7 +66,7 @@ services:
 
 ## Configuration
 
-The migrator is configured with a yaml file that defines how the migrations should be run.
+The migrator is configured with a yaml file which has the following structure.
 
 ```yaml
 # Default flyway arguments for all schemas (optional)

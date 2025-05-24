@@ -19,40 +19,33 @@ func (m *MockSecretsProvider) GetSecret(name string) (map[string]any, error) {
 	return args.Get(0).(map[string]any), args.Error(1)
 }
 
-func Test_AWSSMDatabaseCredentials_Validate_Success(t *testing.T) {
-	c := &AWSSMDatabaseCredentials{
+func validAWSSMDatabaseCredentials() *AWSSMDatabaseCredentials {
+	return &AWSSMDatabaseCredentials{
 		Username: &sp.SecretRef{SecretName: "a", SecretKey: "b"},
 		Password: &sp.SecretRef{SecretName: "a", SecretKey: "b"},
 		Host:     &sp.SecretRef{SecretName: "a", SecretKey: "b"},
 		Port:     &sp.SecretRef{SecretName: "a", SecretKey: "b"},
 		Database: &sp.SecretRef{SecretName: "a", SecretKey: "b"},
+		awssm: new(MockSecretsProvider),
 	}
+}
 
+func Test_AWSSMDatabaseCredentials_Validate_Success(t *testing.T) {
+	c := validAWSSMDatabaseCredentials()
 	assert := assert.New(t)
 	assert.NoError(c.Validate())
 }
 
 func Test_AWSSMDatabaseCredentials_Validate_FailsWhenSecretRefInvalid(t *testing.T) {
-	c := &AWSSMDatabaseCredentials{
-		Username: &sp.SecretRef{SecretName: "a", SecretKey: "b"},
-		Password: &sp.SecretRef{SecretName: "a", SecretKey: "b"},
-		Host:     &sp.SecretRef{SecretName: "a", SecretKey: "b"},
-		Port:     &sp.SecretRef{SecretName: "a", SecretKey: "b"},
-		Database: &sp.SecretRef{SecretKey: "b"},
-	}
-
+	c := *validAWSSMDatabaseCredentials()
+	c.Database = &sp.SecretRef{SecretKey: "b"}
+	
 	assert := assert.New(t)
 	assert.Error(c.Validate())
 }
 
 func Test_AWSSMDatabaseCredentials_Validate_FailsWhenFieldNil(t *testing.T) {
-	c := &AWSSMDatabaseCredentials{
-		Username: &sp.SecretRef{SecretName: "a", SecretKey: "b"},
-		Password: &sp.SecretRef{SecretName: "a", SecretKey: "b"},
-		Host:     &sp.SecretRef{SecretName: "a", SecretKey: "b"},
-		Port:     &sp.SecretRef{SecretName: "a", SecretKey: "b"},
-		Database: &sp.SecretRef{SecretKey: "b"},
-	}
+	c := validAWSSMDatabaseCredentials()
 	assert := assert.New(t)
 	for _, field := range []**sp.SecretRef{&c.Username, &c.Password, &c.Host, &c.Port, &c.Database} {
 		fieldBefore := *field
@@ -60,6 +53,32 @@ func Test_AWSSMDatabaseCredentials_Validate_FailsWhenFieldNil(t *testing.T) {
 		assert.Error(c.Validate())
 		*field = fieldBefore
 	}
+}
+
+func Test_AWSSMDatabaseCredentials_Validate_LoadsAWSProvider(t *testing.T) {
+	c := validAWSSMDatabaseCredentials()
+	c.awssm = nil
+	assert := assert.New(t)
+	calls := 0
+	NewAWSSecretsManager = func() (*sp.AWSSecretsManager, error) {
+		calls ++
+		return &sp.AWSSecretsManager{}, nil
+	}
+	assert.NoError(c.Validate())
+	assert.Equal(calls, 1)
+}
+
+func Test_AWSSMDatabaseCredentials_Validate_FailsWhenAWSProviderLoadFails(t *testing.T) {
+	c := validAWSSMDatabaseCredentials()
+	c.awssm = nil
+	assert := assert.New(t)
+	calls := 0
+	NewAWSSecretsManager = func() (*sp.AWSSecretsManager, error) {
+		calls ++
+		return nil, fmt.Errorf("error")
+	}
+	assert.Error(c.Validate())
+	assert.Equal(calls, 1)
 }
 
 func Test_AWSSMDatabaseCredentials_GetCredentials_Succeeds(t *testing.T) {

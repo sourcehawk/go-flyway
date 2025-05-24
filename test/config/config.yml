@@ -1,0 +1,36 @@
+# Tests the migrator's functionality against flyway migrations
+flywayArgs:
+  - -connectRetries=1
+  - -baselineOnMigrate=true
+  - -outOfOrder=false
+  - -validateMigrationNaming=true
+
+credentials:
+  provider: text
+  text:
+    username: postgres
+    password: postgres
+    host: localhost
+    port: 5432
+    database: postgres
+
+schemas:
+  - name: test_1
+    migrationsPath: ./test/migrations
+    flywayArgs:
+      - -connectRetries=15
+    placeholders:
+      - name: test_var
+        value: test_value
+      - name: test_vars
+        valueFromFile: ./test/environments/test-ci-migrator/vars.txt
+
+  - name: test_2
+    migrationsPath: ./test/migrations
+    flywayArgs:
+      - -connectRetries=2
+    placeholders:
+      - name: test_var
+        value: test_value
+      - name: test_vars
+        valueFromFile: ./test/environments/test-ci-migrator/vars.txt

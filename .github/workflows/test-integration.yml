@@ -1,0 +1,53 @@
+name: Integration Tests
+
+on:
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.24"
+
+      - name: Build go-flyway binary
+        run: go build -o go-flyway main.go
+
+      - name: Make go-flyway binary executable
+        run: chmod +x go-flyway
+
+      - name: Install flyway version ${{ env.FLYWAY_VERSION }}
+        run: |
+          wget -qO flyway-commandline-${FLYWAY_VERSION}-linux-x64.tar.gz https://download.red-gate.com/maven/release/com/redgate/flyway/flyway-commandline/${FLYWAY_VERSION}/flyway-commandline-${FLYWAY_VERSION}-linux-x64.tar.gz && \
+          tar -xvzf flyway-commandline-${FLYWAY_VERSION}-linux-x64.tar.gz && \
+          ln -s `pwd`/flyway-${FLYWAY_VERSION}/flyway /usr/local/bin
+
+      - name: Install postgres client
+        run: sudo apt-get install -y postgresql-client
+
+      - name: Run db init script
+        env:
+          PGHOST: localhost
+          PGPORT: 5432
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          PGDATABASE: postgres
+        run: ./test/init.sh
+
+      - name: Run integration test
+        run: go-flyway --config=./test/config/config.yml

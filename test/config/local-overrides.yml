@@ -1,0 +1,8 @@
+credentials:
+  provider: text
+  text:
+    username: postgres
+    password: postgres
+    host: migrator-db
+    port: 5432
+    database: postgres

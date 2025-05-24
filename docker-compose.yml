@@ -1,0 +1,26 @@
+services:
+  migrator-db:
+    image: postgres:17
+    container_name: migrator-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "9999:5432"
+    volumes:
+      - ./test/init.sh:/docker-entrypoint-initdb.d/init.sh
+
+  migrator-test:
+    image: migrator-test:latest
+    container_name: migrator-test
+    build:
+      context: "."
+      dockerfile: Dockerfile
+    command:
+      - "--config=./test/config/config.yml"
+      - "--config=./test/config/local-overrides.yml"
+    volumes:
+      - ./test:/app/test
+    depends_on:
+      - migrator-db

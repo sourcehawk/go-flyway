@@ -119,6 +119,9 @@ env:
 }
 
 func Test_Credentials_Validate_AWSSMDatabaseCredentials(t *testing.T) {
+	cp.NewAWSSecretsManager = func() (*sp.AWSSecretsManager, error) {
+		return &sp.AWSSecretsManager{}, nil
+	}
 	c := Credentials{
 		Provider: string(cp.AWSSMSecretsProviderType),
 		CredentialProviders: CredentialProviders{

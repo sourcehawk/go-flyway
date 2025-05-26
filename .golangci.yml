@@ -1,0 +1,36 @@
+version: "2"
+
+run:
+  issues-exit-code: 1
+
+linters:
+  enable:
+    - errcheck
+    - govet
+    - staticcheck
+    - unused
+
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - goimports
+
+severity:
+  default: error
+
+  rules:
+    - linters:
+        - gofmt
+      severity: error
+    - linters:
+        - goimports
+      severity: error
+    - linters:
+        - gofumpt
+      severity: error
+
+issues:
+  {}
+  # e.g. skip generated code
+  # fix: true

@@ -111,6 +111,34 @@ func Test_AWSSMDatabaseCredentials_GetCredentials_Succeeds(t *testing.T) {
 	assert.Equal(creds.Database, "postgres")
 }
 
+func Test_AWSSMDatabaseCredentials_GetCredentials_CachesCredentials(t *testing.T) {
+	awssm := new(MockSecretsProvider)
+	fakeSecret := map[string]any{
+		"usernamey": "bob",
+		"passwordy": "supersecret",
+		"hosty":     "localhost",
+		"porty":     5432,
+		"databasey": "postgres",
+	}
+	awssm.On("GetSecret", "a").Return(fakeSecret, nil)
+
+	c := &AWSSMDatabaseCredentials{
+		Username: &sp.SecretRef{SecretName: "a", SecretKey: "usernamey"},
+		Password: &sp.SecretRef{SecretName: "a", SecretKey: "passwordy"},
+		Host:     &sp.SecretRef{SecretName: "a", SecretKey: "hosty"},
+		Port:     &sp.SecretRef{SecretName: "a", SecretKey: "porty"},
+		Database: &sp.SecretRef{SecretName: "a", SecretKey: "databasey"},
+		awssm:    awssm,
+	}
+
+	creds, err := c.GetCredentials()
+	assert := assert.New(t)
+	assert.NoError(err)
+	creds2, err := c.GetCredentials()
+	assert.NoError(err)
+	assert.Same(creds, creds2, "Returns same object on second call")
+}
+
 type TestNotJSONSerializable struct {
 	Ch chan struct{}
 }

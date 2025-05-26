@@ -7,6 +7,7 @@ import (
 	sp "github.com/sourcehawk/go-flyway/internal/secrets_provider"
 )
 
+
 var NewAWSSecretsManager = sp.NewAWSSecretsManager
 
 type AWSSMDatabaseCredentials struct {
@@ -16,6 +17,7 @@ type AWSSMDatabaseCredentials struct {
 	Port     *sp.SecretRef `yaml:"port,omitempty"`
 	Database *sp.SecretRef `yaml:"database,omitempty"`
 	awssm    sp.SecretsProvider
+	credentials *DatabaseCredentials
 }
 
 func (d *AWSSMDatabaseCredentials) Validate() error {
@@ -52,6 +54,10 @@ func (d *AWSSMDatabaseCredentials) Validate() error {
 func (d *AWSSMDatabaseCredentials) GetCredentials() (*DatabaseCredentials, error) {
 	if err := d.Validate(); err != nil {
 		return nil, err
+	}
+
+	if d.credentials != nil {
+		return d.credentials, nil
 	}
 
 	secretsMap := make(map[string]map[string]any)
@@ -99,5 +105,6 @@ func (d *AWSSMDatabaseCredentials) GetCredentials() (*DatabaseCredentials, error
 		return nil, fmt.Errorf("failed to unmarshal credentials to json: %w", err)
 	}
 
+	d.credentials = credentials
 	return credentials, nil
 }

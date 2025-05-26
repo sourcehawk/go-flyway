@@ -18,17 +18,11 @@ formatters:
 
 severity:
   default: error
-
-  rules:
-    - linters:
-        - gofmt
-      severity: error
-    - linters:
-        - goimports
-      severity: error
-    - linters:
-        - gofumpt
-      severity: error
+  # Overrides
+  # rules:
+  #   - linters:
+  #       - gofmt
+  #     severity: error
 
 issues:
   {}

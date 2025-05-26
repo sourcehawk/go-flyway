@@ -22,4 +22,3 @@ type DatabaseCredentials struct {
 	Port     int    `json:"port,omitempty" yaml:"port,omitempty"`
 	Database string `json:"database,omitempty" yaml:"database,omitempty"`
 }
-

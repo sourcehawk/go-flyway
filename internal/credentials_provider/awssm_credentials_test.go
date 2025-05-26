@@ -26,7 +26,7 @@ func validAWSSMDatabaseCredentials() *AWSSMDatabaseCredentials {
 		Host:     &sp.SecretRef{SecretName: "a", SecretKey: "b"},
 		Port:     &sp.SecretRef{SecretName: "a", SecretKey: "b"},
 		Database: &sp.SecretRef{SecretName: "a", SecretKey: "b"},
-		awssm: new(MockSecretsProvider),
+		awssm:    new(MockSecretsProvider),
 	}
 }
 
@@ -39,7 +39,7 @@ func Test_AWSSMDatabaseCredentials_Validate_Success(t *testing.T) {
 func Test_AWSSMDatabaseCredentials_Validate_FailsWhenSecretRefInvalid(t *testing.T) {
 	c := *validAWSSMDatabaseCredentials()
 	c.Database = &sp.SecretRef{SecretKey: "b"}
-	
+
 	assert := assert.New(t)
 	assert.Error(c.Validate())
 }
@@ -61,7 +61,7 @@ func Test_AWSSMDatabaseCredentials_Validate_LoadsAWSProvider(t *testing.T) {
 	assert := assert.New(t)
 	calls := 0
 	NewAWSSecretsManager = func() (*sp.AWSSecretsManager, error) {
-		calls ++
+		calls++
 		return &sp.AWSSecretsManager{}, nil
 	}
 	assert.NoError(c.Validate())
@@ -74,7 +74,7 @@ func Test_AWSSMDatabaseCredentials_Validate_FailsWhenAWSProviderLoadFails(t *tes
 	assert := assert.New(t)
 	calls := 0
 	NewAWSSecretsManager = func() (*sp.AWSSecretsManager, error) {
-		calls ++
+		calls++
 		return nil, fmt.Errorf("error")
 	}
 	assert.Error(c.Validate())

@@ -7,16 +7,15 @@ import (
 	sp "github.com/sourcehawk/go-flyway/internal/secrets_provider"
 )
 
-
 var NewAWSSecretsManager = sp.NewAWSSecretsManager
 
 type AWSSMDatabaseCredentials struct {
-	Username *sp.SecretRef `yaml:"username,omitempty"`
-	Password *sp.SecretRef `yaml:"password,omitempty"`
-	Host     *sp.SecretRef `yaml:"host,omitempty"`
-	Port     *sp.SecretRef `yaml:"port,omitempty"`
-	Database *sp.SecretRef `yaml:"database,omitempty"`
-	awssm    sp.SecretsProvider
+	Username    *sp.SecretRef `yaml:"username,omitempty"`
+	Password    *sp.SecretRef `yaml:"password,omitempty"`
+	Host        *sp.SecretRef `yaml:"host,omitempty"`
+	Port        *sp.SecretRef `yaml:"port,omitempty"`
+	Database    *sp.SecretRef `yaml:"database,omitempty"`
+	awssm       sp.SecretsProvider
 	credentials *DatabaseCredentials
 }
 

@@ -8,7 +8,7 @@ import (
 
 type CredentialProviders struct {
 	EnvProviderImpl   *cp.EnvDatabaseCredentials   `yaml:"env,omitempty"`
-	TextProviderImpl  *cp.TextDatabaseCredentials      `yaml:"text,omitempty"`
+	TextProviderImpl  *cp.TextDatabaseCredentials  `yaml:"text,omitempty"`
 	AwssmProviderImpl *cp.AWSSMDatabaseCredentials `yaml:"aws_sm,omitempty"`
 }
 

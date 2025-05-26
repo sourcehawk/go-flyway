@@ -1,7 +1,5 @@
 package credentials_provider
 
-import "fmt"
-
 type CredentialsProviderType string
 
 const (
@@ -25,28 +23,3 @@ type DatabaseCredentials struct {
 	Database string `json:"database,omitempty" yaml:"database,omitempty"`
 }
 
-func (d *DatabaseCredentials) Validate() error {
-	if d.Username == "" {
-		return fmt.Errorf("missing 'username' key in database credentials")
-	}
-	if d.Password == "" {
-		return fmt.Errorf("missing 'password' key in database credentials")
-	}
-	if d.Host == "" {
-		return fmt.Errorf("missing 'host' key in database credentials")
-	}
-	if d.Port == 0 {
-		return fmt.Errorf("missing 'port' key in database credentials")
-	}
-	if d.Database == "" {
-		return fmt.Errorf("missing 'database' key in database credentials")
-	}
-	return nil
-}
-
-func (d *DatabaseCredentials) GetCredentials() (*DatabaseCredentials, error) {
-	if err := d.Validate(); err != nil {
-		return nil, err
-	}
-	return d, nil
-}

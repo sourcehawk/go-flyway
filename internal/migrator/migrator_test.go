@@ -15,12 +15,14 @@ func validMockMigrator() *Migrator {
 		Credentials: &Credentials{
 			Provider: string(cp.TextProviderType),
 			CredentialProviders: CredentialProviders{
-				TextProviderImpl: &cp.DatabaseCredentials{
-					Username: "a",
-					Password: "a",
-					Host:     "a",
-					Port:     5432,
-					Database: "a",
+				TextProviderImpl: &cp.TextDatabaseCredentials{
+					DatabaseCredentials: cp.DatabaseCredentials{
+						Username: "a",
+						Password: "a",
+						Host:     "a",
+						Port:     5432,
+						Database: "a",
+					},
 				},
 			},
 		},
@@ -162,7 +164,7 @@ schemas:
 	assert.Nil(schema1.Placeholders)
 	assert.Contains(schema1.FlywayArgs, "-key=val2")
 	assert.Contains(schema1.FlywayArgs, "-foo=bar")
-	assert.Equal(*schema1.Credentials.TextProviderImpl, cp.DatabaseCredentials{
+	assert.Equal(schema1.Credentials.TextProviderImpl.DatabaseCredentials, cp.DatabaseCredentials{
 		Username: "y",
 		Password: "y",
 		Host:     "y",
@@ -175,7 +177,7 @@ schemas:
 	assert.Contains(schema2.FlywayArgs, "-key=val")
 	assert.Contains(schema2.FlywayArgs, "-baselineOnMigrate=true")
 	assert.Equal(*schema2.Placeholders[0], Placeholder{Name: "test_placeholder", Value: "test_value"})
-	assert.Equal(*schema2.Credentials.TextProviderImpl, cp.DatabaseCredentials{
+	assert.Equal(schema2.Credentials.TextProviderImpl.DatabaseCredentials, cp.DatabaseCredentials{
 		Username: "x",
 		Password: "x",
 		Host:     "x",

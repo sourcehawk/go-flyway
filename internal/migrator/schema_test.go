@@ -109,7 +109,7 @@ placeholders:
 	assert.Equal(s.Name, "testing")
 	assert.Equal(s.FlywayArgs, []string{"-baselineOnMigrate=true"})
 	assert.Equal(*s.Placeholders[0], Placeholder{Name: "test_placeholder", Value: "test_value"})
-	assert.Equal(*s.Credentials.TextProviderImpl, cp.DatabaseCredentials{
+	assert.Equal(s.Credentials.TextProviderImpl.DatabaseCredentials, cp.DatabaseCredentials{
 		Username: "x",
 		Password: "x",
 		Host:     "x",

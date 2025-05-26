@@ -20,12 +20,14 @@ func validTestCredentials() *Credentials {
 	return &Credentials{
 		Provider: string(cp.TextProviderType),
 		CredentialProviders: CredentialProviders{
-			TextProviderImpl: &cp.DatabaseCredentials{
-				Username: "a",
-				Password: "a",
-				Host:     "a",
-				Port:     5432,
-				Database: "a",
+			TextProviderImpl: &cp.TextDatabaseCredentials{
+				DatabaseCredentials: cp.DatabaseCredentials{
+					Username: "a",
+					Password: "a",
+					Host:     "a",
+					Port:     5432,
+					Database: "a",
+				},
 			},
 		},
 	}
@@ -178,12 +180,14 @@ func Test_Credentials_Validate_TextDatabaseCredentials(t *testing.T) {
 	c := Credentials{
 		Provider: string(cp.TextProviderType),
 		CredentialProviders: CredentialProviders{
-			TextProviderImpl: &cp.DatabaseCredentials{
-				Username: "a",
-				Password: "a",
-				Host:     "a",
-				Port:     5432,
-				Database: "a",
+			TextProviderImpl: &cp.TextDatabaseCredentials{
+				DatabaseCredentials: cp.DatabaseCredentials{
+					Username: "a",
+					Password: "a",
+					Host:     "a",
+					Port:     5432,
+					Database: "a",
+				},
 			},
 		},
 	}
@@ -221,12 +225,14 @@ func Test_Credentials_fetchCredentials_SucceedsAndCachesFetchedCredentials(t *te
 	c := Credentials{
 		Provider: string(cp.TextProviderType),
 		CredentialProviders: CredentialProviders{
-			TextProviderImpl: &cp.DatabaseCredentials{
-				Username: "a",
-				Password: "b",
-				Host:     "c",
-				Port:     5432,
-				Database: "d",
+			TextProviderImpl: &cp.TextDatabaseCredentials{
+				DatabaseCredentials: cp.DatabaseCredentials{
+					Username: "a",
+					Password: "a",
+					Host:     "a",
+					Port:     5432,
+					Database: "a",
+				},
 			},
 		},
 	}
@@ -236,7 +242,7 @@ func Test_Credentials_fetchCredentials_SucceedsAndCachesFetchedCredentials(t *te
 
 	creds, err := c.fetchCredentials()
 	assert.NoError(err)
-	assert.Equal(creds, c.TextProviderImpl)
+	assert.Equal(*creds, c.TextProviderImpl.DatabaseCredentials)
 
 	mockConcreteProvider := new(MockCredentialsProvider)
 	mockConcreteProvider.On("GetCredentials").Return(&cp.DatabaseCredentials{}, nil)
@@ -246,19 +252,21 @@ func Test_Credentials_fetchCredentials_SucceedsAndCachesFetchedCredentials(t *te
 	creds, err = c.fetchCredentials()
 	mockConcreteProvider.AssertNotCalled(t, "GetCredentials")
 	assert.NoError(err)
-	assert.Equal(creds, c.TextProviderImpl)
+	assert.Equal(*creds, c.TextProviderImpl.DatabaseCredentials)
 }
 
 func Test_Credentials_fetchCredentials_FailsWhenCredentialProviderReturnsError(t *testing.T) {
 	c := Credentials{
 		Provider: string(cp.TextProviderType),
 		CredentialProviders: CredentialProviders{
-			TextProviderImpl: &cp.DatabaseCredentials{
-				Username: "a",
-				Password: "b",
-				Host:     "c",
-				Port:     5432,
-				Database: "d",
+			TextProviderImpl: &cp.TextDatabaseCredentials{
+				DatabaseCredentials: cp.DatabaseCredentials{
+					Username: "a",
+					Password: "a",
+					Host:     "a",
+					Port:     5432,
+					Database: "a",
+				},
 			},
 		},
 	}
@@ -280,31 +288,35 @@ func Test_Credentials_FetchCredentials_Succeeds(t *testing.T) {
 	c := Credentials{
 		Provider: string(cp.TextProviderType),
 		CredentialProviders: CredentialProviders{
-			TextProviderImpl: &cp.DatabaseCredentials{
-				Username: "a",
-				Password: "b",
-				Host:     "c",
-				Port:     5432,
-				Database: "d",
+			TextProviderImpl: &cp.TextDatabaseCredentials{
+				DatabaseCredentials: cp.DatabaseCredentials{
+					Username: "a",
+					Password: "a",
+					Host:     "a",
+					Port:     5432,
+					Database: "a",
+				},
 			},
 		},
 	}
 	assert := assert.New(t)
 	creds, err := c.FetchCredentials()
 	assert.NoError(err)
-	assert.Equal(creds, c.TextProviderImpl)
+	assert.Equal(*creds, c.TextProviderImpl.DatabaseCredentials)
 }
 
 func Test_Credentials_FetchCredentials_FailsOnValidationError(t *testing.T) {
 	c := Credentials{
 		Provider: string(cp.TextProviderType),
 		CredentialProviders: CredentialProviders{
-			TextProviderImpl: &cp.DatabaseCredentials{
-				Username: "a",
-				Password: "b",
-				Host:     "c",
-				Port:     5432,
-				// Database: "d",
+			TextProviderImpl: &cp.TextDatabaseCredentials{
+				DatabaseCredentials: cp.DatabaseCredentials{
+					Username: "a",
+					Password: "a",
+					Host:     "a",
+					Port:     5432,
+					// Database: "a",
+				},
 			},
 		},
 	}

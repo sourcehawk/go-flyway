@@ -125,7 +125,7 @@ func Test_Credentials_Validate_AWSSMDatabaseCredentials(t *testing.T) {
 		return &sp.AWSSecretsManager{}, nil
 	}
 	c := Credentials{
-		Provider: string(cp.AWSSMSecretsProviderType),
+		Provider: string(cp.AWSSMProviderType),
 		CredentialProviders: CredentialProviders{
 			AwssmProviderImpl: &cp.AWSSMDatabaseCredentials{
 				Username: &sp.SecretRef{SecretName: "a", SecretKey: "b"},
@@ -142,7 +142,7 @@ func Test_Credentials_Validate_AWSSMDatabaseCredentials(t *testing.T) {
 
 func Test_Credentials_Validate_AWSSMDatabaseCredentialsFailsIfNoImpl(t *testing.T) {
 	c := Credentials{
-		Provider:            string(cp.AWSSMSecretsProviderType),
+		Provider:            string(cp.AWSSMProviderType),
 		CredentialProviders: CredentialProviders{},
 	}
 	assert := assert.New(t)

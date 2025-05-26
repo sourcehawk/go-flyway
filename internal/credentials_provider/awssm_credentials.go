@@ -21,19 +21,19 @@ type AWSSMDatabaseCredentials struct {
 
 func (d *AWSSMDatabaseCredentials) Validate() error {
 	if d.Username == nil {
-		return fmt.Errorf("missing 'username' key in %s credentials", AWSSMSecretsProviderType)
+		return fmt.Errorf("missing 'username' key in %s credentials", AWSSMProviderType)
 	}
 	if d.Password == nil {
-		return fmt.Errorf("missing 'password' key in %s credentials", AWSSMSecretsProviderType)
+		return fmt.Errorf("missing 'password' key in %s credentials", AWSSMProviderType)
 	}
 	if d.Host == nil {
-		return fmt.Errorf("missing 'host' key in %s credentials", AWSSMSecretsProviderType)
+		return fmt.Errorf("missing 'host' key in %s credentials", AWSSMProviderType)
 	}
 	if d.Port == nil {
-		return fmt.Errorf("missing 'port' key in %s credentials", AWSSMSecretsProviderType)
+		return fmt.Errorf("missing 'port' key in %s credentials", AWSSMProviderType)
 	}
 	if d.Database == nil {
-		return fmt.Errorf("missing 'database' key in %s credentials", AWSSMSecretsProviderType)
+		return fmt.Errorf("missing 'database' key in %s credentials", AWSSMProviderType)
 	}
 	for _, s := range []*sp.SecretRef{d.Username, d.Password, d.Host, d.Port, d.Database} {
 		if err := s.Validate(); err != nil {

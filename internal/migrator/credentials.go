@@ -37,7 +37,7 @@ func (c *Credentials) Validate() error {
 			return fmt.Errorf("could not find credentials configuration for provider %s", c.Provider)
 		}
 		c.concreteProvider = c.EnvProviderImpl
-	case cp.AWSSMSecretsProviderType:
+	case cp.AWSSMProviderType:
 		if c.AwssmProviderImpl == nil {
 			return fmt.Errorf("could not find credentials configuration for provider %s", c.Provider)
 		}

@@ -3,9 +3,9 @@ package credentials_provider
 type CredentialsProviderType string
 
 const (
-	TextProviderType         CredentialsProviderType = "text"
-	EnvProviderType          CredentialsProviderType = "env"
-	AWSSMSecretsProviderType CredentialsProviderType = "aws_sm"
+	TextProviderType  CredentialsProviderType = "text"
+	EnvProviderType   CredentialsProviderType = "env"
+	AWSSMProviderType CredentialsProviderType = "aws_sm"
 )
 
 type DatabaseCredentialsProvider interface {

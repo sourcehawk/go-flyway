@@ -245,7 +245,7 @@ go test -v ./...
 The migrator is also validated using [golangci-lint](https://golangci-lint.run/welcome/quick-start/). To run the linter locally, run the following command:
 
 ```bash
-golangci-lint run ./...
+golangci-lint run
 ```
 
 To test migrator against flyway migrations (integration tests), run the following commands and watch for any non-zero exit codes:

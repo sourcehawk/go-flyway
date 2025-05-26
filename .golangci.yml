@@ -21,7 +21,7 @@ severity:
   # Overrides
   # rules:
   #   - linters:
-  #       - gofmt
+  #       - errheck
   #     severity: error
 
 issues:

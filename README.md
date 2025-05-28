@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/sourcehawk/go-flyway/graph/badge.svg?token=14L5SEPDBW)](https://codecov.io/gh/sourcehawk/go-flyway)
+
 # Go Flyway
 
 go-flyway is a go wrapper for flyway migrations with secret store provider support for database credentials.
